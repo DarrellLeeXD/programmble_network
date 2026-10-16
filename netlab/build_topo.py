@@ -10,15 +10,11 @@ import json
 import sys
 
 import yaml
-from mininet.cli import CLI
-from mininet.log import setLogLevel
-from mininet.net import Mininet
-from mininet.nodelib import LinuxBridge
 
 
 def load(path):
     """Read the network description. Same data model, two possible serialisations."""
-    with open(path) as f:
+    with open(path, encoding="utf-8") as f:
         if path.endswith(".json"):
             return json.load(f)
         return yaml.safe_load(f)
@@ -54,7 +50,7 @@ def check_mine(spec):
 def check(spec):
     """Return a list of problems in the description (an empty list means it looks fine).
 
-    Week 2 task: report any IP address that is used by more than one host.
+    Report duplicate IPv4/IPv6 addresses and links to missing nodes.
     """
     problems = []
     seen = {}
@@ -65,17 +61,26 @@ def check(spec):
             try:
                 address = ipaddress.ip_interface(host[key]).ip
             except ValueError:
-                # check_mine() already reports invalid addresses.
+                # check_mine() reports malformed addresses.
                 continue
             if address in seen:
                 problems.append(f"{host['name']} and {seen[address]} both use {address}")
             else:
                 seen[address] = host["name"]
+
+    nodes = set(spec.get("switches", [])) | {host["name"] for host in spec["hosts"]}
+    for a, b in spec.get("links", []):
+        for endpoint in (a, b):
+            if endpoint not in nodes:
+                problems.append(f"link {a} - {b} names missing node {endpoint}")
     return problems
 
 
 def build(spec):
     """Turn the description into a Mininet network: switches, then hosts, then links."""
+    from mininet.net import Mininet
+    from mininet.nodelib import LinuxBridge
+
     net = Mininet(switch=LinuxBridge, controller=None, autoSetMacs=True)
     for name in spec["switches"]:
         net.addSwitch(name)
@@ -104,6 +109,9 @@ if __name__ == "__main__":
         for p in problems:
             print("PROBLEM:", p)
         sys.exit("Fix the description and try again.")
+
+    from mininet.cli import CLI
+    from mininet.log import setLogLevel
 
     setLogLevel("info")
     net = build(spec)

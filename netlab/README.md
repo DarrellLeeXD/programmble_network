@@ -1,47 +1,69 @@
-# Week 2 netlab
+# Week 2 network lab
 
-This topology uses student ID suffix `4940`: IPv4 addresses are in
-`10.40.0.0/16`, and IPv6 addresses are in `fd00:4940::/32`.
+This network has three switches in a chain, with two hosts on each switch.
+The student ID suffix `4940` gives the IPv4 block `10.40.0.0/16` and IPv6
+block `fd00:4940::/32`; only the suffix is stored in this repository.
 
-## Run in the course container
+## Run the lab
 
-From this directory on a machine with Docker:
+From this `netlab` directory on a machine with Docker:
 
 ```sh
 docker run -it --rm --privileged -v "${PWD}:/lab" -w /lab firdaussahran/netlab-mininet:1.0
 ```
 
-Inside the container, run either version of the same network:
+Inside the container:
 
 ```sh
 python3 build_topo.py topology.yaml
-# at the mininet> prompt:
-net
+# At mininet>:
 pingall
 h1 ping -6 -c 1 fd00:4940::2
 h1 ip neigh
 exit
 
 python3 build_topo.py topology.json
-# at the mininet> prompt:
+# At mininet>:
 pingall
 exit
 ```
 
-The four-host topology has 12 directed host-to-host ping attempts. To see
-the duplicate-address failure, temporarily give h4 the same `ip` and `ipv6`
-values as h2, then run `python3 build_topo.py topology.yaml`. The script
-reports both conflicting addresses before starting Mininet. Restore h4's
-addresses to `.4` and `::4` afterward.
+Both files describe the same three switches, six hosts and eight links.
+The expected `pingall` result is 30/30 replies. The commands above must be
+run to establish whether the live network achieves that result.
+
+## Check bad data and collect evidence
+
+`bad.yaml` contains duplicate IPv4 and IPv6 addresses for h2 and h6, plus
+a link to nonexistent s9. Run `python3 build_topo.py bad.yaml` to see the
+three `PROBLEM` lines before Mininet starts. The checked output is saved in
+`evidence/check.txt`.
+
+The GitHub Actions workflow at `.github/workflows/netlab-evidence.yml` runs
+the course container and uploads `pingall.txt`, `neigh.txt`, `macs.txt` and
+`dad.txt` as an artifact. Those captures should be committed to `evidence/`
+after confirming that they came from a successful run.
+
+## Generate the page
+
+From this directory in the course container, run:
+
+```sh
+python3 make_page.py topology.yaml
+```
+
+The generator checks the topology and writes `netlab/docs/index.html`. For
+GitHub Pages in this repository, copy that generated file to the repository
+root's `docs/index.html`, commit it, and select branch `main` and folder
+`/docs` in Settings → Pages. This keeps the original `netlab/` layout while
+publishing the generated page.
 
 ## Lab wrap-up
 
-1. The data model is the switches, hosts, addresses, and links. YAML and JSON
-   are two ways to write that same model. Conversion to JSON loses the YAML
-   comments and the original formatting.
-2. `check()` identifies both duplicate addresses before the network starts;
-   `pingall` can show only a small failure count. IPv6 Duplicate Address
-   Detection marks a duplicate address as `dadfailed`; IPv4 ARP does not
-   perform that check.
-3. `git diff` shows exactly which lines changed, while folders named
-   `topology-v2-final` do not provide a reliable change history.
+1. The data model is the switches, hosts, addresses and links. YAML and JSON
+   serialise the same model; JSON conversion loses YAML comments and layout.
+2. `check()` rejects duplicate addresses and missing nodes before building.
+   A small `pingall` loss would be much less specific. IPv6 DAD can mark a
+   duplicate `dadfailed`, while IPv4 accepts the duplicate.
+3. `git diff` shows exactly which lines changed, and commits preserve an
+   inspectable sequence of work. Versioned folder names cannot do that.

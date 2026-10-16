@@ -50,6 +50,14 @@ class CheckTests(unittest.TestCase):
         ]}
         self.assertIn("h4 and h2 both use 10.7.0.2", self.check(spec))
 
+    def test_reports_link_to_missing_node(self):
+        spec = {
+            "switches": ["s1"],
+            "hosts": [{"name": "h1", "ip": "10.7.0.1/24"}],
+            "links": [["h1", "s1"], ["h1", "s9"]],
+        }
+        self.assertIn("link h1 - s9 names missing node s9", self.check(spec))
+
 
 if __name__ == "__main__":
     unittest.main()
