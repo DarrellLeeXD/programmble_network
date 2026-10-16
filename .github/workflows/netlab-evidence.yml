@@ -23,10 +23,11 @@ jobs:
             firdaussahran/netlab-mininet:1.0 \
             python3 build_topo.py topology.yaml <<'MININET' 2>&1 | tee netlab/evidence/session.txt
           pingall
+          sh sleep 8
           h1 ip -6 addr show dev h1-eth0
           h2 ip -6 addr show dev h2-eth0
           h1 cat /proc/sys/net/ipv6/conf/all/disable_ipv6
-          h1 ping -6 -c 1 fd00:4940::2
+          h1 ping -6 -c 1 fd00:4940::2 > evidence/ipv6.txt
           h1 ip -6 neigh
           h1 ip neigh > evidence/neigh.txt
           sh brctl showmacs s1 > evidence/macs.txt
@@ -45,6 +46,7 @@ jobs:
           Path('netlab/evidence/pingall.txt').write_text('\n'.join(lines[start:end + 1]) + '\n')
           PY
           grep -q '0% dropped' netlab/evidence/pingall.txt
+          grep -q '1 received' netlab/evidence/ipv6.txt
           for file in netlab/evidence/*.txt; do
             echo "EVIDENCE_BEGIN:$file"
             base64 -w 0 "$file"
