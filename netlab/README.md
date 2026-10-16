@@ -29,8 +29,8 @@ exit
 ```
 
 Both files describe the same three switches, six hosts and eight links.
-The expected `pingall` result is 30/30 replies. The commands above must be
-run to establish whether the live network achieves that result.
+The captured run achieved 30/30 IPv4 replies and a successful h1-to-h2 IPv6
+probe. See `evidence/pingall.txt` and `evidence/ipv6.txt`.
 
 ## Check bad data and collect evidence
 
@@ -40,9 +40,9 @@ three `PROBLEM` lines before Mininet starts. The checked output is saved in
 `evidence/check.txt`.
 
 The GitHub Actions workflow at `.github/workflows/netlab-evidence.yml` runs
-the course container and uploads `pingall.txt`, `neigh.txt`, `macs.txt` and
-`dad.txt` as an artifact. Those captures should be committed to `evidence/`
-after confirming that they came from a successful run.
+the course container and uploads its captured files as an artifact. The files
+in `evidence/` are from its successful run, including `pingall.txt`,
+`ipv6.txt`, `neigh.txt`, `macs.txt`, `dad.txt`, and the full `session.txt`.
 
 ## Generate the page
 

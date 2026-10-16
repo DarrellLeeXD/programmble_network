@@ -1,0 +1,66 @@
+# page.yaml: the words on your page, kept as data like everything else.
+# make_page.py puts each answer under its question. A few sentences each, in your own words;
+# leave a blank line between paragraphs. Refer to YOUR network and YOUR evidence.
+# Never put your name or full student ID here: the page is public.
+
+repository: https://github.com/DarrellLeeXD/programmble_network
+
+answers:
+  planes:
+    question: "Where are the data, control and management planes in your network?"
+    answer: >-
+      The Linux bridges s1, s2 and s3 form the data plane: they forward Ethernet
+      frames and learn source MAC addresses. The YAML file and the scripts are
+      the management plane because they define, check and build the topology.
+      There is no external controller or routing protocol in this lab; the
+      switches learn directly from traffic rather than from a separate control
+      plane.
+  learning:
+    question: "How did your switches learn which port leads to each host? Use your MAC table evidence."
+    answer: >-
+      Each bridge records the source MAC address and incoming port of a frame.
+      After h1 communicates with h2, s1 learns the two local host ports. Traffic
+      from h3 through h6 reaches s1 through the link to s2, so their MAC
+      addresses map to that inter-switch port. In macs.txt, s1 has h1 on port 1,
+      h2 on port 2, and h3 through h6 on port 3, its link toward s2.
+  kind:
+    question: "Which of the four kinds of programmability is this assignment (a network described as data, then built and documented by scripts)? Why isn't it any of the other three?"
+    answer: >-
+      This is automated configuration management: one checked YAML model drives
+      both the Mininet build and the published documentation. It does not change
+      the switch packet-processing program, move forwarding decisions to an
+      external controller, or use a model-driven device API such as NETCONF.
+  two_am:
+    question: "Week 1's 2 a.m. change on 40 switches: what would be different if those switches were described like your network?"
+    answer: >-
+      A shared source of truth would let me change the intended setting once,
+      inspect the diff, run checks, and apply the generated configuration to
+      all 40 switches consistently. I would still test the change and verify
+      the rollout because a mistake in the source data could affect every
+      switch, and a failed rollout could leave only some switches updated.
+  model:
+    question: "What's the difference between your network's data model and its serialisation? Use YAML and JSON as the example."
+    answer: >-
+      The model is three switches, six hosts with two addresses each, and eight
+      links. topology.yaml and topology.json encode that same structure in
+      different syntax; either can be loaded by build_topo.py. Conversion to
+      JSON removes YAML comments and the original formatting, but it does not
+      change which hosts connect to which switches.
+  check:
+    question: "Why is it better to catch bad data in check() than with pingall? What did IPv6 notice about a duplicate address that IPv4 didn't?"
+    answer: >-
+      check() rejects bad.yaml before Mininet starts: it reports the duplicate
+      IPv4 and IPv6 addresses on h2 and h6, plus a link to missing s9. pingall
+      only probes IPv4 connectivity and may show a small failure count while
+      the address conflict remains. IPv6 Duplicate Address Detection can mark
+      the extra address dadfailed; IPv4 accepts the duplicate and ARP replies
+      become ambiguous. In dad.txt, h2's added fd00:4940::1 is marked dadfailed,
+      while its added 10.40.0.1 remains a secondary IPv4 address.
+  git:
+    question: "What does your Git history give you that copying files into folders named topology-v2-final wouldn't?"
+    answer: >-
+      The commits show the three-host starting point, the second switch and
+      fourth host, the duplicate-address check, the six-host design, and the
+      missing-link check as separate steps. git diff identifies the exact lines
+      changed, and a commit can be compared with or restored from another.
+      Folder names alone do not tell me which addresses or links changed.
