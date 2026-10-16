@@ -1,0 +1,36 @@
+netlab/test_check.py
+  s_3ea27f9d4012d4::t_e349abf7fefd74 1-44,53-55
+  s_3ea27f9d4012d4::t_179fcafe06e098 45-52
+netlab/topology.json
+  s_a7d03123c25ce9::t_b024f800f7f460 1-51
+netlab/.gitignore
+  s_3ea27f9d4012d4::t_491c9975d586e7 1
+netlab/build_topo.py
+  s_3ea27f9d4012d4::t_6c6a0190f59608 60-73
+netlab/README.md
+  s_3ea27f9d4012d4::t_491c9975d586e7 1-47
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "67d8ad7f2d8a4a26377560798fbc5fe39567cf54",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrell.lee@galactic-horizons.com>"
+    },
+    "s_a7d03123c25ce9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "unknown"
+      },
+      "human_author": "darrell.lee <darrell.lee@galactic-horizons.com>"
+    }
+  }
+}
