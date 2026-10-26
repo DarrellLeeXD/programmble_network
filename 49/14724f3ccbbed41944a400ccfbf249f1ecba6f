@@ -1,0 +1,34 @@
+netlab/build_routed.py
+  s_3ea27f9d4012d4::t_9a30739a65cb19 154-177
+netlab/missing.yaml
+  s_3ea27f9d4012d4::t_af1674ae1aad03 1-60
+netlab/test_week3.py
+  s_3ea27f9d4012d4::t_944c69be854f50 1-118
+netlab/network.yaml
+  s_3ea27f9d4012d4::t_7e62613474b5e3 1-4,6,8,12,16,19-26,28,30-33,37-40,42-61
+netlab/loop.yaml
+  s_3ea27f9d4012d4::t_af1674ae1aad03 1-62
+.github/workflows/week3-evidence.yml
+  s_3ea27f9d4012d4::t_274fd724aa32ad 94-101
+  s_3ea27f9d4012d4::t_73960ea47c53f1 1-93,102-109
+netlab/make_page3.py
+  s_3ea27f9d4012d4::t_9a30739a65cb19 68-84
+netlab/page3.yaml
+  s_3ea27f9d4012d4::t_3e0ead587ae500 5,10-16,19-26,29-34,37-43
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "4914724f3ccbbed41944a400ccfbf249f1ecba6f",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    }
+  }
+}
