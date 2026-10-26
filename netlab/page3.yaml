@@ -2,18 +2,42 @@
 # A few sentences each, in your own words, about YOUR network and YOUR evidence.
 # Leave a blank line between paragraphs. Never put your name or full student ID here.
 
-repository: https://github.com/YOUR-USERNAME/YOUR-REPOSITORY
+repository: https://github.com/DarrellLeeXD/programmble_network
 
 answers:
   design:
     question: "Describe your design: why these routers, LANs and links, and how you chose the addresses."
-    answer: ""
+    answer: >-
+      I put r1, r2, r3 and r4 in a ring, with one host LAN on each router.
+      There are two physical directions between any pair of routers. I kept
+      every network inside my 10.40.0.0/16 block: the LANs are 10.40.1.0/24,
+      10.40.16.0/24, 10.40.32.0/24 and 10.40.33.0/24, while the four router
+      links use separate /30 networks. I chose adjacent 32 and 33 LANs so r1
+      can describe both with one summary route.
   summary:
     question: "Which route summarises several LANs? Which networks does it cover, why is it correct, and what else would it attract if you added a network inside its range?"
-    answer: ""
+    answer: >-
+      On r1, 10.40.32.0/23 via 10.40.41.1 summarises the h3 and h4 LANs,
+      10.40.32.0/24 and 10.40.33.0/24. Both are reached through r4 from r1;
+      r4 forwards h3 traffic onward to r3. The summary matches any address
+      from 10.40.32.0 through 10.40.33.255, including a future subnet carved
+      from that space, even if that subnet belongs somewhere else. Those two
+      current /24 LANs already fill the /23, so adding a separate subnet there
+      would first require renumbering or subdividing one of them.
   failure:
     question: "When you took a link down, what happened, and why couldn't your routes recover even though another path existed? What would have recovered?"
-    answer: ""
+    answer: >-
+      With the r1-r4 link down, h1's trace to h4 stopped. r1 still selected
+      its 10.40.32.0/23 static route via 10.40.41.1, even though the physical
+      ring still offered r1-r2-r3-r4. These static entries do not discover a
+      replacement next hop. Updating the static route, adding a tracked backup
+      route, or using a dynamic routing protocol such as OSPF could recover.
   control_plane:
     question: "In your network, what was the control plane? Who worked out the routes, and what does that mean for a network of 40 routers?"
-    answer: ""
+    answer: >-
+      I acted as the control plane by choosing the routes in network.yaml;
+      check_paths() checked the intended paths, and build_routed.py installed
+      them. Each Linux router then forwarded packets using its own routing
+      table. Doing this by hand on 40 routers would mean many next hops to
+      calculate and keep consistent after each change, so a routing protocol
+      or automated controller would be more practical.

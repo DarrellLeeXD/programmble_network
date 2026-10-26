@@ -1,0 +1,109 @@
+name: Collect Week 3 routed network evidence
+
+on:
+  push:
+    branches: [codex/week3-route-network, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  routed-network:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check paths and collect Mininet observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p netlab/evidence3
+          docker run --rm -i --privileged \
+            -v "$PWD/netlab:/lab" -w /lab \
+            firdaussahran/netlab-mininet:1.0 \
+            python3 -m unittest -q test_week3.py
+
+          set +e
+          docker run --rm -i --privileged \
+            -v "$PWD/netlab:/lab" -w /lab \
+            firdaussahran/netlab-mininet:1.0 \
+            python3 build_routed.py loop.yaml > loop.out 2>&1
+          loop_status=$?
+          docker run --rm -i --privileged \
+            -v "$PWD/netlab:/lab" -w /lab \
+            firdaussahran/netlab-mininet:1.0 \
+            python3 build_routed.py missing.yaml > missing.out 2>&1
+          missing_status=$?
+          set -e
+          test "$loop_status" -ne 0
+          test "$missing_status" -ne 0
+          {
+            echo '== loop.yaml =='
+            cat loop.out
+            echo '== missing.yaml =='
+            cat missing.out
+          } > netlab/evidence3/check.txt
+          grep -q 'PROBLEM:.*routing loop' netlab/evidence3/check.txt
+          grep -q 'PROBLEM:.*no route' netlab/evidence3/check.txt
+          test "$(grep -c 'nothing was built' netlab/evidence3/check.txt)" -eq 2
+
+          docker run --rm -i --privileged \
+            -v "$PWD/netlab:/lab" -w /lab \
+            firdaussahran/netlab-mininet:1.0 \
+            python3 build_routed.py network.yaml <<'MININET' 2>&1 | tee netlab/evidence3/session.txt
+          pingall
+          sh echo '== r1 ==' > evidence3/routes.txt
+          r1 ip route >> evidence3/routes.txt
+          sh echo '== r2 ==' >> evidence3/routes.txt
+          r2 ip route >> evidence3/routes.txt
+          sh echo '== r3 ==' >> evidence3/routes.txt
+          r3 ip route >> evidence3/routes.txt
+          sh echo '== r4 ==' >> evidence3/routes.txt
+          r4 ip route >> evidence3/routes.txt
+          sh echo '== h1 to h2 ==' > evidence3/traces.txt
+          h1 traceroute -n -I h2 >> evidence3/traces.txt
+          sh echo '== h1 to h3 ==' >> evidence3/traces.txt
+          h1 traceroute -n -I h3 >> evidence3/traces.txt
+          sh echo '== h1 to h4 ==' >> evidence3/traces.txt
+          h1 traceroute -n -I h4 >> evidence3/traces.txt
+          sh echo '== r1 to h3 ==' > evidence3/summary.txt
+          r1 ip route get 10.40.32.10 >> evidence3/summary.txt
+          sh echo '== r1 to h4 ==' >> evidence3/summary.txt
+          r1 ip route get 10.40.33.10 >> evidence3/summary.txt
+          link r1 r4 down
+          sh echo '== h1 to h4 with r1-r4 down ==' > evidence3/failure.txt
+          h1 traceroute -n -I -m 5 -w 1 -q 1 h4 >> evidence3/failure.txt
+          sh echo '== r1 route to h4 after failure ==' >> evidence3/failure.txt
+          r1 ip route get 10.40.33.10 >> evidence3/failure.txt
+          link r1 r4 up
+          pingall
+          exit
+          MININET
+
+          grep -q '0% dropped' netlab/evidence3/session.txt
+          test "$(grep -c 'via 10.40.41.1' netlab/evidence3/summary.txt)" -eq 2
+          for file in check routes traces summary failure session; do
+            test -s "netlab/evidence3/$file.txt"
+          done
+          docker run --rm -i --privileged \
+            -v "$PWD/netlab:/lab" -w /lab \
+            firdaussahran/netlab-mininet:1.0 \
+            python3 make_page3.py network.yaml
+          test -s netlab/docs/week3/index.html
+          if grep -q 'class="missing"' netlab/docs/week3/index.html; then
+            echo 'Generated page has missing evidence' >&2
+            exit 1
+          fi
+          if grep -q '(Not answered yet.)' netlab/docs/week3/index.html; then
+            echo 'Generated page has unanswered questions' >&2
+            exit 1
+          fi
+      - name: Upload Week 3 evidence and generated page
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: week3-network-evidence
+          path: |
+            netlab/evidence3/
+            netlab/docs/week3/index.html
