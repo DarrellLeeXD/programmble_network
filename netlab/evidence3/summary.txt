@@ -1,0 +1,6 @@
+== r1 to h3 ==
+10.40.32.10 via 10.40.41.1 dev r1-eth2 src 10.40.41.2 uid 0
+    cache
+== r1 to h4 ==
+10.40.33.10 via 10.40.41.1 dev r1-eth2 src 10.40.41.2 uid 0
+    cache

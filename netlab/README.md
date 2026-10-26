@@ -67,3 +67,23 @@ publishing the generated page.
    duplicate `dadfailed`, while IPv4 accepts the duplicate.
 3. `git diff` shows exactly which lines changed, and commits preserve an
    inspectable sequence of work. Versioned folder names cannot do that.
+
+## Week 3 routed network
+
+`network.yaml` describes four routers in a ring, each with one host LAN.
+r1's `10.40.32.0/23` route summarises the h3 and h4 LANs through r4.
+`build_routed.py` checks every ordered host pair before it builds anything.
+`loop.yaml` sends h3 traffic between r1 and r4, while `missing.yaml` removes
+r2's route to h4; the resulting `PROBLEM` messages are in
+`evidence3/check.txt`.
+
+The Week 3 GitHub Actions workflow runs the course Mininet container on a
+GitHub-hosted Linux runner. It captures all routers' routes, traces from h1
+to the other hosts, the summary route's next hop for h3 and h4, and a trace
+after the r1-r4 link goes down. The host-only ping test reached 12/12 pairs
+before the failure and again after restoring the link and affected static
+routes. See `evidence3/` for the real output.
+
+`make_page3.py network.yaml` generates `netlab/docs/week3/index.html` from
+the data, evidence and `page3.yaml` answers. The same generated file is copied
+to the repository root at `docs/week3/index.html` for GitHub Pages.

@@ -1,0 +1,7 @@
+== loop.yaml ==
+PROBLEM: h1 -> h3: routing loop (r1 -> r4 -> r1)
+PROBLEM: h4 -> h3: routing loop (r4 -> r1 -> r4)
+Fix the description and try again: nothing was built.
+== missing.yaml ==
+PROBLEM: h2 -> h4: no route at r2 to 10.40.33.10
+Fix the description and try again: nothing was built.

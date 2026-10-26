@@ -1,0 +1,9 @@
+== h1 to h4 with r1-r4 down ==
+traceroute to 10.40.33.10 (10.40.33.10), 5 hops max, 60 byte packets
+ 1  *
+ 2  *
+ 3  *
+ 4  *
+ 5  *
+== r1 route to h4 after failure ==
+RTNETLINK answers: Network is unreachable

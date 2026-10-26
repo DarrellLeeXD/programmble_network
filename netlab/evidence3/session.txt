@@ -1,0 +1,42 @@
+*** Error setting resource limits. Mininet's performance may be affected.
+*** Configuring hosts
+r1 r2 r3 r4 h1 h2 h3 h4
+*** Starting controller
+
+*** Starting 0 switches
+
+*** Starting CLI:
+Applying routes:
+  r1 ip route add 10.40.16.0/24 via 10.40.12.2
+  r1 ip route add 10.40.32.0/23 via 10.40.41.1
+  r2 ip route add 10.40.1.0/24 via 10.40.12.1
+  r2 ip route add 10.40.32.0/24 via 10.40.23.2
+  r2 ip route add 10.40.33.0/24 via 10.40.23.2
+  r3 ip route add 10.40.1.0/24 via 10.40.23.1
+  r3 ip route add 10.40.16.0/24 via 10.40.23.1
+  r3 ip route add 10.40.33.0/24 via 10.40.34.2
+  r4 ip route add 10.40.1.0/24 via 10.40.41.2
+  r4 ip route add 10.40.16.0/24 via 10.40.41.2
+  r4 ip route add 10.40.32.0/24 via 10.40.34.1
+
+Hosts: h1 10.40.1.10 (via r1), h2 10.40.16.10 (via r2), h3 10.40.32.10 (via r3), h4 10.40.33.10 (via r4)
+
+mininet> h1 -> h2 h3 h4
+h2 -> h1 h3 h4
+h3 -> h1 h2 h4
+h4 -> h1 h2 h3
+*** Results: 0% dropped (12/12 received)
+mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> mininet> h1 -> h2 h3 h4
+h2 -> h1 h3 h4
+h3 -> h1 h2 h4
+h4 -> h1 h2 h3
+*** Results: 0% dropped (12/12 received)
+mininet> *** Stopping 0 controllers
+
+*** Stopping 8 links
+........
+*** Stopping 0 switches
+
+*** Stopping 8 hosts
+r1 r2 r3 r4 h1 h2 h3 h4
+*** Done
