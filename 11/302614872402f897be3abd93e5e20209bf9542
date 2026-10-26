@@ -1,0 +1,25 @@
+netlab/build_routed.py
+  s_3ea27f9d4012d4::t_343144b3805827 1-210
+netlab/make_page3.py
+  s_3ea27f9d4012d4::t_bc9b0ed43f4e1f 1-193
+netlab/network.yaml
+  s_3ea27f9d4012d4::t_9f03d0c84ad6c9 1-36
+netlab/page3.yaml
+  s_3ea27f9d4012d4::t_349771289a50a2 1-19
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "11302614872402f897be3abd93e5e20209bf9542",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    }
+  }
+}
