@@ -52,7 +52,7 @@ jobs:
             -v "$PWD/netlab:/lab" -w /lab \
             firdaussahran/netlab-mininet:1.0 \
             python3 build_routed.py network.yaml <<'MININET' 2>&1 | tee netlab/evidence3/session.txt
-          pingall
+          py net.ping([net.get(h) for h in ('h1', 'h2', 'h3', 'h4')])
           sh echo '== r1 ==' > evidence3/routes.txt
           r1 ip route >> evidence3/routes.txt
           sh echo '== r2 ==' >> evidence3/routes.txt
@@ -75,13 +75,16 @@ jobs:
           sh echo '== h1 to h4 with r1-r4 down ==' > evidence3/failure.txt
           h1 traceroute -n -I -m 5 -w 1 -q 1 h4 >> evidence3/failure.txt
           sh echo '== r1 route to h4 after failure ==' >> evidence3/failure.txt
-          r1 ip route get 10.40.33.10 >> evidence3/failure.txt
+          r1 ip route get 10.40.33.10 >> evidence3/failure.txt 2>&1
           link r1 r4 up
-          pingall
+          r1 ip route replace 10.40.32.0/23 via 10.40.41.1
+          r4 ip route replace 10.40.1.0/24 via 10.40.41.2
+          r4 ip route replace 10.40.16.0/24 via 10.40.41.2
+          py net.ping([net.get(h) for h in ('h1', 'h2', 'h3', 'h4')])
           exit
           MININET
 
-          grep -q '0% dropped' netlab/evidence3/session.txt
+          test "$(grep -c '0% dropped (12/12 received)' netlab/evidence3/session.txt)" -eq 2
           test "$(grep -c 'via 10.40.41.1' netlab/evidence3/summary.txt)" -eq 2
           for file in check routes traces summary failure session; do
             test -s "netlab/evidence3/$file.txt"

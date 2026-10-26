@@ -27,11 +27,13 @@ answers:
   failure:
     question: "When you took a link down, what happened, and why couldn't your routes recover even though another path existed? What would have recovered?"
     answer: >-
-      With the r1-r4 link down, h1's trace to h4 stopped. r1 still selected
-      its 10.40.32.0/23 static route via 10.40.41.1, even though the physical
-      ring still offered r1-r2-r3-r4. These static entries do not discover a
-      replacement next hop. Updating the static route, adding a tracked backup
-      route, or using a dynamic routing protocol such as OSPF could recover.
+      With the r1-r4 link down, h1's trace to h4 timed out, and r1's route
+      lookup reported Network is unreachable. Linux removed the static route
+      through the down interface. The ring still offered r1-r2-r3-r4, but no
+      static alternate route had been installed. After bringing the link back
+      up, I reapplied the affected routes to restore reachability. A tracked
+      backup route or a dynamic routing protocol such as OSPF could choose the
+      surviving path automatically.
   control_plane:
     question: "In your network, what was the control plane? Who worked out the routes, and what does that mean for a network of 40 routers?"
     answer: >-
