@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 4 · OpenFlow lab · 4940</title>
+<style>
+:root { color-scheme: light; }
+body { font: 16px/1.6 system-ui,sans-serif; color:#152238; background:#f6f8fc; margin:0; }
+main { max-width:900px; margin:auto; padding:24px 20px 80px; }
+a { color:#075ca4; } h1 { font-size:2.3rem; line-height:1.15; margin:14px 0; } h2 { font-size:1.35rem; margin:0; }
+.eyebrow { color:#53657d; text-transform:uppercase; letter-spacing:.12em; font-size:.75rem; font-weight:700; }
+.intro,.step,.answers { background:white; border:1px solid #dbe4f0; border-radius:14px; padding:20px 24px; margin:18px 0; box-shadow:0 3px 12px #182c4610; }
+.step p { margin:8px 0 16px; } .topology { display:grid; justify-items:center; gap:10px; margin:22px 0; }
+.hosts { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; width:100%; border-top:2px solid #bdd2eb; padding-top:14px; }
+.node { min-width:105px; padding:12px; text-align:center; border-radius:12px; background:#e9f1fb; border:1px solid #bdd2eb; }
+.switch { background:#173b66; color:white; } .node small { display:block; }
+details { border-top:1px solid #e2e8f0; padding:10px 0; } summary { cursor:pointer; font-weight:600; }
+pre { background:#111b2c; color:#e8f1ff; padding:14px; border-radius:8px; overflow-x:auto; font-size:.78rem; line-height:1.45; }
+.answers h3 { font-size:1.08rem; margin-bottom:4px; } .answers p { margin-top:0; }
+@media(max-width:520px) { h1 {font-size:1.8rem} .intro,.step,.answers {padding:17px} }
+</style></head><body><main>
+<p><a href="../week3/">← Week 3</a></p><p class="eyebrow">WIC2005 · Week 4 · Student ID ending 4940</p>
+<h1>OpenFlow, one rule at a time</h1>
+<div class="intro"><p>Three Mininet hosts on <code>10.40.0.0/24</code> connect through Open vSwitch. I changed its flow table from empty to hub, MAC forwarding, firewall and controller-driven forwarding, then tested control-channel failure and standalone fallback.</p>
+<div class="topology"><div class="node switch">s1<small>Open vSwitch</small></div><div class="hosts"><div class="node">h1<small>10.40.0.1 · port 1</small></div><div class="node">h2<small>10.40.0.2 · port 2</small></div><div class="node">h3<small>10.40.0.3 · port 3</small></div></div></div>
+<p>These observations came from the <a href="https://github.com/DarrellLeeXD/programmble_network/actions/workflows/week4-evidence.yml">course Mininet container in GitHub Actions</a>. <a href="https://github.com/DarrellLeeXD/programmble_network/blob/main/netlab/evidence4/session.txt">Read the full transcript</a> or <a href="https://github.com/DarrellLeeXD/programmble_network/blob/main/netlab/README.md#week-4-openflow-lab">the lab README</a>.</p></div>
+<section class="step"><h2>0 · Empty switch</h2><p>With no controller and no rules, h1 could not reach h2.</p><details><summary>Empty flow table</summary><pre>mininet&gt; NXST_FLOW reply (xid=0x4):</pre></details>
+<details><summary>h1 → h2: 100% loss</summary><pre>mininet&gt; PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1034ms</pre></details></section><section class="step"><h2>1 · Hub</h2><p>A flood rule restored all six ordered host paths, but h3 overheard h1 and h2.</p><details><summary>All-host ping</summary><pre>mininet&gt; *** Ping: testing ping reachability
+h1 -&gt; h2 h3 
+h2 -&gt; h1 h3 
+h3 -&gt; h1 h2 
+*** Results: 0% dropped (6/6 received)</pre></details>
+<details><summary>Flood rule and counter</summary><pre>mininet&gt; NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=0.034s, table=0, n_packets=6, n_bytes=468, idle_age=0, actions=FLOOD
+mininet&gt; [1] 121
+mininet&gt; PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.264 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.384 ms
+64 bytes from 10.40.0.2: icmp_seq=3 ttl=64 time=0.330 ms
+
+--- 10.40.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2029ms
+rtt min/avg/max/mdev = 0.264/0.326/0.384/0.049 ms</pre></details>
+<details><summary>h3 packet capture</summary><pre>mininet&gt; libibverbs: Warning: couldn&#x27;t open config directory &#x27;/etc/libibverbs.d&#x27;.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on h3-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+00:42:52.958856 IP 10.40.0.1 &gt; 10.40.0.2: ICMP echo request, id 124, seq 2, length 64
+00:42:52.959021 IP 10.40.0.2 &gt; 10.40.0.1: ICMP echo reply, id 124, seq 2, length 64
+00:42:53.982774 IP 10.40.0.1 &gt; 10.40.0.2: ICMP echo request, id 124, seq 3, length 64
+00:42:53.982928 IP 10.40.0.2 &gt; 10.40.0.1: ICMP echo reply, id 124, seq 3, length 64
+
+4 packets captured
+4 packets received by filter
+0 packets dropped by kernel</pre></details></section><section class="step"><h2>2 · MAC forwarding</h2><p>ARP flooded; destination MAC rules sent unicast frames to the correct ports. h3 captured no h1–h2 ICMP.</p><details><summary>All-host ping</summary><pre>mininet&gt; *** Ping: testing ping reachability
+h1 -&gt; h2 h3 
+h2 -&gt; h1 h3 
+h3 -&gt; h1 h2 
+*** Results: 0% dropped (6/6 received)
+mininet&gt; [1] 148
+mininet&gt; PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.165 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.309 ms
+64 bytes from 10.40.0.2: icmp_seq=3 ttl=64 time=0.278 ms
+
+--- 10.40.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2043ms
+rtt min/avg/max/mdev = 0.165/0.250/0.309/0.061 ms</pre></details>
+<details><summary>h3 packet capture</summary><pre>mininet&gt; libibverbs: Warning: couldn&#x27;t open config directory &#x27;/etc/libibverbs.d&#x27;.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on h3-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+
+0 packets captured
+0 packets received by filter
+0 packets dropped by kernel</pre></details>
+<details><summary>Flow table</summary><pre>mininet&gt; NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=6.077s, table=0, n_packets=0, n_bytes=0, idle_age=6, arp actions=FLOOD
+ cookie=0x0, duration=6.074s, table=0, n_packets=7, n_bytes=686, idle_age=4, dl_dst=00:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=6.071s, table=0, n_packets=7, n_bytes=686, idle_age=4, dl_dst=00:00:00:00:00:02 actions=output:2
+ cookie=0x0, duration=6.068s, table=0, n_packets=4, n_bytes=392, idle_age=6, dl_dst=00:00:00:00:00:03 actions=output:3</pre></details></section><section class="step"><h2>3 · Firewall priority</h2><p>The equal-priority drop saw no packets in this run. At priority 40000 it blocked h1 → h3 and the reply to h3 → h1 while h1 → h2 remained reachable.</p><details><summary>First drop rule: ping</summary><pre>mininet&gt; PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+64 bytes from 10.40.0.3: icmp_seq=1 ttl=64 time=0.158 ms
+64 bytes from 10.40.0.3: icmp_seq=2 ttl=64 time=0.184 ms
+64 bytes from 10.40.0.3: icmp_seq=3 ttl=64 time=0.193 ms
+
+--- 10.40.0.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2063ms
+rtt min/avg/max/mdev = 0.158/0.178/0.193/0.014 ms</pre></details>
+<details><summary>First drop rule: counter</summary><pre>mininet&gt; NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=8.152s, table=0, n_packets=0, n_bytes=0, idle_age=8, arp actions=FLOOD
+ cookie=0x0, duration=8.149s, table=0, n_packets=9, n_bytes=882, idle_age=1, dl_dst=00:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=8.146s, table=0, n_packets=7, n_bytes=686, idle_age=6, dl_dst=00:00:00:00:00:02 actions=output:2
+ cookie=0x0, duration=8.143s, table=0, n_packets=6, n_bytes=588, idle_age=1, dl_dst=00:00:00:00:00:03 actions=output:3
+ cookie=0x0, duration=2.071s, table=0, n_packets=0, n_bytes=0, idle_age=2, icmp,nw_src=10.40.0.1,nw_dst=10.40.0.3 actions=drop</pre></details>
+<details><summary>High priority: h1 → h3</summary><pre>mininet&gt; PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+
+--- 10.40.0.3 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2078ms</pre></details>
+<details><summary>High priority: h1 → h2</summary><pre>mininet&gt; PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.395 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.371 ms
+64 bytes from 10.40.0.2: icmp_seq=3 ttl=64 time=0.319 ms
+
+--- 10.40.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2067ms
+rtt min/avg/max/mdev = 0.319/0.361/0.395/0.031 ms</pre></details>
+<details><summary>High priority: h3 → h1</summary><pre>mininet&gt; PING 10.40.0.1 (10.40.0.1) 56(84) bytes of data.
+
+--- 10.40.0.1 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2043ms</pre></details>
+<details><summary>High-priority flow table</summary><pre>mininet&gt; NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=10.209s, table=0, n_packets=6, n_bytes=588, idle_age=1, priority=40000,icmp,nw_src=10.40.0.1,nw_dst=10.40.0.3 actions=drop
+ cookie=0x0, duration=18.368s, table=0, n_packets=0, n_bytes=0, idle_age=18, arp actions=FLOOD
+ cookie=0x0, duration=18.365s, table=0, n_packets=16, n_bytes=1568, idle_age=1, dl_dst=00:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=18.362s, table=0, n_packets=10, n_bytes=980, idle_age=3, dl_dst=00:00:00:00:00:02 actions=output:2
+ cookie=0x0, duration=18.359s, table=0, n_packets=7, n_bytes=686, idle_age=10, dl_dst=00:00:00:00:00:03 actions=output:3</pre></details></section><section class="step"><h2>4 · Controller</h2><p>The connected controller installed a table-miss rule and conversation flows with 60-second idle timeouts.</p><details><summary>Controller connected</summary><pre>mininet&gt; e46b7b9d-8bcd-463d-92bb-a42093b36294
+    Bridge s1
+        Controller &quot;tcp:127.0.0.1:6653&quot;
+            is_connected: true
+        fail_mode: secure
+        datapath_type: netdev
+        Port s1-eth2
+            Interface s1-eth2
+        Port s1-eth3
+            Interface s1-eth3
+        Port s1-eth1
+            Interface s1-eth1
+        Port s1
+            Interface s1
+                type: internal</pre></details>
+<details><summary>Two conversations</summary><pre>mininet&gt; PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.789 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.368 ms
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1054ms
+rtt min/avg/max/mdev = 0.368/0.578/0.789/0.210 ms
+mininet&gt; PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+64 bytes from 10.40.0.3: icmp_seq=1 ttl=64 time=0.774 ms
+64 bytes from 10.40.0.3: icmp_seq=2 ttl=64 time=0.536 ms
+
+--- 10.40.0.3 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1020ms
+rtt min/avg/max/mdev = 0.536/0.655/0.774/0.119 ms</pre></details>
+<details><summary>Reactive flows</summary><pre>mininet&gt; NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=2.082s, table=0, n_packets=2, n_bytes=196, idle_timeout=60, idle_age=1, priority=1,icmp,in_port=1,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:01,dl_dst=00:00:00:00:00:02,nw_src=10.40.0.1,nw_dst=10.40.0.2,nw_tos=0,icmp_type=8,icmp_code=0 actions=output:2
+ cookie=0x0, duration=2.082s, table=0, n_packets=2, n_bytes=196, idle_timeout=60, idle_age=1, priority=1,icmp,in_port=2,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:02,dl_dst=00:00:00:00:00:01,nw_src=10.40.0.2,nw_dst=10.40.0.1,nw_tos=0,icmp_type=0,icmp_code=0 actions=output:1
+ cookie=0x0, duration=1.023s, table=0, n_packets=1, n_bytes=98, idle_timeout=60, idle_age=0, priority=1,icmp,in_port=3,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:03,dl_dst=00:00:00:00:00:02,nw_src=10.40.0.3,nw_dst=10.40.0.2,nw_tos=0,icmp_type=0,icmp_code=0 actions=output:2
+ cookie=0x0, duration=0.004s, table=0, n_packets=1, n_bytes=98, idle_timeout=60, idle_age=0, priority=1,icmp,in_port=2,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:02,dl_dst=00:00:00:00:00:03,nw_src=10.40.0.2,nw_dst=10.40.0.3,nw_tos=0,icmp_type=8,icmp_code=0 actions=output:3
+ cookie=0x0, duration=6.094s, table=0, n_packets=4, n_bytes=336, idle_age=1, priority=0 actions=CONTROLLER:128</pre></details></section><section class="step"><h2>5 · Lost control channel</h2><p>Cached h1–h2 traffic survived at first. New h1–h3 traffic failed, and h1–h2 failed after its flows expired.</p><details><summary>Controller disconnected</summary><pre>mininet&gt; _uuid               : bf417010-bf1c-4db8-b398-769335e43f84
+connection_mode     : []
+controller_burst_limit: []
+controller_queue_size: []
+controller_rate_limit: []
+enable_async_messages: []
+external_ids        : {}
+inactivity_probe    : []
+is_connected        : false
+local_gateway       : []
+local_ip            : []
+local_netmask       : []
+max_backoff         : []
+other_config        : {}
+role                : []
+status              : {last_error=&quot;Connection refused&quot;, sec_since_connect=&quot;7&quot;, sec_since_disconnect=&quot;1&quot;, state=BACKOFF}
+target              : &quot;tcp:127.0.0.1:6653&quot;
+type                : []</pre></details>
+<details><summary>Cached h1 → h2</summary><pre>mininet&gt; PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.279 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.340 ms
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1060ms
+rtt min/avg/max/mdev = 0.279/0.309/0.340/0.030 ms</pre></details>
+<details><summary>New h1 → h3</summary><pre>mininet&gt; PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+
+--- 10.40.0.3 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1019ms</pre></details>
+<details><summary>h1 → h2 after idle timeout</summary><pre>mininet&gt; PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1001ms</pre></details></section><section class="step"><h2>6 · Standalone fallback</h2><p>After switching to standalone mode, h1 could reach h3 again through ordinary MAC learning.</p><details><summary>Fail-mode</summary><pre>mininet&gt; standalone</pre></details>
+<details><summary>h1 → h3</summary><pre>mininet&gt; PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+64 bytes from 10.40.0.3: icmp_seq=1 ttl=64 time=0.386 ms
+64 bytes from 10.40.0.3: icmp_seq=2 ttl=64 time=0.262 ms
+
+--- 10.40.0.3 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1063ms
+rtt min/avg/max/mdev = 0.262/0.324/0.386/0.062 ms</pre></details></section>
+<div class="answers"><h2>Wrap-up answers</h2><section><h3>Why did the first firewall rule have no effect, and why does h3 → h1 fail too?</h3><p>The first drop overlapped the destination-MAC forwarding rule at the same default priority, 32768. OpenFlow does not specify which equal-priority rule wins. In this run, the drop counted zero packets while h1 reached h3. At priority 40000, the drop won. When h3 pings h1, h1’s echo reply has source 10.40.0.1 and destination 10.40.0.3, so it is dropped too.</p></section>
+<section><h3>Why did one conversation survive controller failure?</h3><p>The controller had already installed h1–h2 flows in the switch, so those packets kept forwarding. A new h1–h3 packet matched the table-miss rule, which sent it to the disconnected controller; no forwarding flow arrived. After 60 seconds of idleness, the h1–h2 flows expired and that conversation failed too.</p></section>
+<section><h3>Secure or standalone for a campus network?</h3><p>I would choose secure for switches that enforce campus firewall policy. New traffic may stop when the controller fails, but the switch will not silently bypass the policy. Standalone keeps basic connectivity by falling back to MAC learning, at the cost of losing controller-installed security and traffic rules. Controller redundancy can reduce secure mode’s availability cost.</p></section></div>
+</main></body></html>

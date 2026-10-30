@@ -87,3 +87,46 @@ routes. See `evidence3/` for the real output.
 `make_page3.py network.yaml` generates `netlab/docs/week3/index.html` from
 the data, evidence and `page3.yaml` answers. The same generated file is copied
 to the repository root at `docs/week3/index.html` for GitHub Pages.
+
+## Week 4 OpenFlow lab
+
+This lab uses the same student ID suffix, `4940`, so the three hosts are
+`10.40.0.1` through `10.40.0.3` on one Open vSwitch switch. To reproduce all
+six steps from this directory in the course container, run:
+
+```sh
+bash run_week4.sh
+```
+
+The runner records the complete Mininet transcript at
+`evidence4/session.txt`. It starts with no controller and an empty flow table,
+then installs hub, MAC forwarding and firewall flows. It next connects
+`ovs-testcontroller`, kills it, waits for its flows to expire, and tries
+standalone fail-mode. `check_week4.py` checks the observations in that
+transcript. The GitHub Actions workflow runs the same course container and
+uploads its evidence artifact.
+
+After collecting evidence, `python3 check_week4.py evidence4/session.txt`
+checks it and `python3 make_page4.py` writes the GitHub Pages report at
+`docs/week4/index.html` in the repository root.
+
+### Wrap-up answers
+
+1. The first firewall rule overlapped the existing destination-MAC forwarding
+   rule at the same default priority, 32768. OpenFlow does not specify which
+   equal-priority overlapping rule wins, so that rule cannot reliably enforce
+   a block. Giving the drop rule priority 40000 makes it win. Blocking ICMP
+   from h1 to h3 also stops h3's ping to h1 because h1's echo reply travels
+   from `10.40.0.1` to `10.40.0.3` and matches the drop rule.
+2. The controller had already installed forwarding flows for h1–h2, so the
+   switch could keep using them after the control connection failed. The new
+   h1–h3 conversation needed a table-miss request to the absent controller and
+   could not get a flow. The h1–h2 flows have a 60-second idle timeout; after
+   they expired, that conversation failed as well.
+3. I would choose `secure` for a campus switch enforcing firewall policy.
+   Losing connectivity for new flows while the controller is down is costly,
+   but it keeps the switch from silently bypassing the policy. `standalone`
+   keeps basic connectivity by reverting to ordinary MAC learning, at the
+   cost of controller-installed firewall and traffic rules no longer being
+   enforced. Controller redundancy would reduce the availability cost of
+   `secure` mode.

@@ -1,0 +1,251 @@
+*** Error setting resource limits. Mininet's performance may be affected.
+*** Creating network
+*** Adding controller
+*** Adding hosts:
+h1 h2 h3 
+*** Adding switches:
+s1 
+*** Adding links:
+(h1, s1) (h2, s1) (h3, s1) 
+*** Configuring hosts
+h1 h2 h3 
+*** Starting controller
+
+*** Starting 1 switches
+s1 ...
+*** Starting CLI:
+mininet> @W4:PORTS@
+mininet> OFPT_FEATURES_REPLY (xid=0x2): dpid:0000000000000001
+n_tables:254, n_buffers:0
+capabilities: FLOW_STATS TABLE_STATS PORT_STATS QUEUE_STATS ARP_MATCH_IP
+actions: output enqueue set_vlan_vid set_vlan_pcp strip_vlan mod_dl_src mod_dl_dst mod_nw_src mod_nw_dst mod_nw_tos mod_tp_src mod_tp_dst
+ 1(s1-eth1): addr:8a:3a:6d:0f:57:5b
+     config:     0
+     state:      0
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 2(s1-eth2): addr:da:d5:ef:dc:61:51
+     config:     0
+     state:      0
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ 3(s1-eth3): addr:3a:55:69:1b:67:2c
+     config:     0
+     state:      0
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+ LOCAL(s1): addr:32:7b:24:e3:03:4a
+     config:     PORT_DOWN
+     state:      LINK_DOWN
+     current:    10GB-FD COPPER
+     speed: 10000 Mbps now, 0 Mbps max
+OFPT_GET_CONFIG_REPLY (xid=0x4): frags=normal miss_send_len=0
+mininet> @W4:EMPTY_FLOW@
+mininet> NXST_FLOW reply (xid=0x4):
+mininet> @W4:EMPTY_PING@
+mininet> PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1034ms
+
+mininet> mininet> mininet> @W4:HUB_PINGALL@
+mininet> *** Ping: testing ping reachability
+h1 -> h2 h3 
+h2 -> h1 h3 
+h3 -> h1 h2 
+*** Results: 0% dropped (6/6 received)
+mininet> @W4:HUB_FLOW@
+mininet> NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=0.034s, table=0, n_packets=6, n_bytes=468, idle_age=0, actions=FLOOD
+mininet> [1] 121
+mininet> PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.264 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.384 ms
+64 bytes from 10.40.0.2: icmp_seq=3 ttl=64 time=0.330 ms
+
+--- 10.40.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2029ms
+rtt min/avg/max/mdev = 0.264/0.326/0.384/0.049 ms
+mininet> mininet> @W4:HUB_CAPTURE@
+mininet> libibverbs: Warning: couldn't open config directory '/etc/libibverbs.d'.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on h3-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+00:42:52.958856 IP 10.40.0.1 > 10.40.0.2: ICMP echo request, id 124, seq 2, length 64
+00:42:52.959021 IP 10.40.0.2 > 10.40.0.1: ICMP echo reply, id 124, seq 2, length 64
+00:42:53.982774 IP 10.40.0.1 > 10.40.0.2: ICMP echo request, id 124, seq 3, length 64
+00:42:53.982928 IP 10.40.0.2 > 10.40.0.1: ICMP echo reply, id 124, seq 3, length 64
+
+4 packets captured
+4 packets received by filter
+0 packets dropped by kernel
+mininet> mininet> mininet> mininet> mininet> mininet> mininet> @W4:LEARNING_PINGALL@
+mininet> *** Ping: testing ping reachability
+h1 -> h2 h3 
+h2 -> h1 h3 
+h3 -> h1 h2 
+*** Results: 0% dropped (6/6 received)
+mininet> [1] 148
+mininet> PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.165 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.309 ms
+64 bytes from 10.40.0.2: icmp_seq=3 ttl=64 time=0.278 ms
+
+--- 10.40.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2043ms
+rtt min/avg/max/mdev = 0.165/0.250/0.309/0.061 ms
+mininet> mininet> @W4:LEARNING_CAPTURE@
+mininet> libibverbs: Warning: couldn't open config directory '/etc/libibverbs.d'.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on h3-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+
+0 packets captured
+0 packets received by filter
+0 packets dropped by kernel
+mininet> @W4:LEARNING_FLOW@
+mininet> NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=6.077s, table=0, n_packets=0, n_bytes=0, idle_age=6, arp actions=FLOOD
+ cookie=0x0, duration=6.074s, table=0, n_packets=7, n_bytes=686, idle_age=4, dl_dst=00:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=6.071s, table=0, n_packets=7, n_bytes=686, idle_age=4, dl_dst=00:00:00:00:00:02 actions=output:2
+ cookie=0x0, duration=6.068s, table=0, n_packets=4, n_bytes=392, idle_age=6, dl_dst=00:00:00:00:00:03 actions=output:3
+mininet> mininet> mininet> @W4:LOW_FIREWALL_PING@
+mininet> PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+64 bytes from 10.40.0.3: icmp_seq=1 ttl=64 time=0.158 ms
+64 bytes from 10.40.0.3: icmp_seq=2 ttl=64 time=0.184 ms
+64 bytes from 10.40.0.3: icmp_seq=3 ttl=64 time=0.193 ms
+
+--- 10.40.0.3 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2063ms
+rtt min/avg/max/mdev = 0.158/0.178/0.193/0.014 ms
+mininet> @W4:LOW_FIREWALL_FLOW@
+mininet> NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=8.152s, table=0, n_packets=0, n_bytes=0, idle_age=8, arp actions=FLOOD
+ cookie=0x0, duration=8.149s, table=0, n_packets=9, n_bytes=882, idle_age=1, dl_dst=00:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=8.146s, table=0, n_packets=7, n_bytes=686, idle_age=6, dl_dst=00:00:00:00:00:02 actions=output:2
+ cookie=0x0, duration=8.143s, table=0, n_packets=6, n_bytes=588, idle_age=1, dl_dst=00:00:00:00:00:03 actions=output:3
+ cookie=0x0, duration=2.071s, table=0, n_packets=0, n_bytes=0, idle_age=2, icmp,nw_src=10.40.0.1,nw_dst=10.40.0.3 actions=drop
+mininet> mininet> mininet> mininet> @W4:HIGH_FIREWALL_H1H3@
+mininet> PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+
+--- 10.40.0.3 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2078ms
+
+mininet> @W4:HIGH_FIREWALL_H1H2@
+mininet> PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.395 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.371 ms
+64 bytes from 10.40.0.2: icmp_seq=3 ttl=64 time=0.319 ms
+
+--- 10.40.0.2 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2067ms
+rtt min/avg/max/mdev = 0.319/0.361/0.395/0.031 ms
+mininet> @W4:HIGH_FIREWALL_H3H1@
+mininet> PING 10.40.0.1 (10.40.0.1) 56(84) bytes of data.
+
+--- 10.40.0.1 ping statistics ---
+3 packets transmitted, 0 received, 100% packet loss, time 2043ms
+
+mininet> @W4:HIGH_FIREWALL_FLOW@
+mininet> NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=10.209s, table=0, n_packets=6, n_bytes=588, idle_age=1, priority=40000,icmp,nw_src=10.40.0.1,nw_dst=10.40.0.3 actions=drop
+ cookie=0x0, duration=18.368s, table=0, n_packets=0, n_bytes=0, idle_age=18, arp actions=FLOOD
+ cookie=0x0, duration=18.365s, table=0, n_packets=16, n_bytes=1568, idle_age=1, dl_dst=00:00:00:00:00:01 actions=output:1
+ cookie=0x0, duration=18.362s, table=0, n_packets=10, n_bytes=980, idle_age=3, dl_dst=00:00:00:00:00:02 actions=output:2
+ cookie=0x0, duration=18.359s, table=0, n_packets=7, n_bytes=686, idle_age=10, dl_dst=00:00:00:00:00:03 actions=output:3
+mininet> mininet> mininet> mininet> mininet> mininet> @W4:CONTROLLER_STATUS@
+mininet> e46b7b9d-8bcd-463d-92bb-a42093b36294
+    Bridge s1
+        Controller "tcp:127.0.0.1:6653"
+            is_connected: true
+        fail_mode: secure
+        datapath_type: netdev
+        Port s1-eth2
+            Interface s1-eth2
+        Port s1-eth3
+            Interface s1-eth3
+        Port s1-eth1
+            Interface s1-eth1
+        Port s1
+            Interface s1
+                type: internal
+mininet> @W4:CONTROLLER_PINGS@
+mininet> PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.789 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.368 ms
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1054ms
+rtt min/avg/max/mdev = 0.368/0.578/0.789/0.210 ms
+mininet> PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+64 bytes from 10.40.0.3: icmp_seq=1 ttl=64 time=0.774 ms
+64 bytes from 10.40.0.3: icmp_seq=2 ttl=64 time=0.536 ms
+
+--- 10.40.0.3 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1020ms
+rtt min/avg/max/mdev = 0.536/0.655/0.774/0.119 ms
+mininet> @W4:CONTROLLER_FLOW@
+mininet> NXST_FLOW reply (xid=0x4):
+ cookie=0x0, duration=2.082s, table=0, n_packets=2, n_bytes=196, idle_timeout=60, idle_age=1, priority=1,icmp,in_port=1,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:01,dl_dst=00:00:00:00:00:02,nw_src=10.40.0.1,nw_dst=10.40.0.2,nw_tos=0,icmp_type=8,icmp_code=0 actions=output:2
+ cookie=0x0, duration=2.082s, table=0, n_packets=2, n_bytes=196, idle_timeout=60, idle_age=1, priority=1,icmp,in_port=2,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:02,dl_dst=00:00:00:00:00:01,nw_src=10.40.0.2,nw_dst=10.40.0.1,nw_tos=0,icmp_type=0,icmp_code=0 actions=output:1
+ cookie=0x0, duration=1.023s, table=0, n_packets=1, n_bytes=98, idle_timeout=60, idle_age=0, priority=1,icmp,in_port=3,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:03,dl_dst=00:00:00:00:00:02,nw_src=10.40.0.3,nw_dst=10.40.0.2,nw_tos=0,icmp_type=0,icmp_code=0 actions=output:2
+ cookie=0x0, duration=0.004s, table=0, n_packets=1, n_bytes=98, idle_timeout=60, idle_age=0, priority=1,icmp,in_port=2,vlan_tci=0x0000/0x1fff,dl_src=00:00:00:00:00:02,dl_dst=00:00:00:00:00:03,nw_src=10.40.0.2,nw_dst=10.40.0.3,nw_tos=0,icmp_type=8,icmp_code=0 actions=output:3
+ cookie=0x0, duration=6.094s, table=0, n_packets=4, n_bytes=336, idle_age=1, priority=0 actions=CONTROLLER:128
+mininet> mininet> mininet> mininet> @W4:DISCONNECTED_STATUS@
+mininet> _uuid               : bf417010-bf1c-4db8-b398-769335e43f84
+connection_mode     : []
+controller_burst_limit: []
+controller_queue_size: []
+controller_rate_limit: []
+enable_async_messages: []
+external_ids        : {}
+inactivity_probe    : []
+is_connected        : false
+local_gateway       : []
+local_ip            : []
+local_netmask       : []
+max_backoff         : []
+other_config        : {}
+role                : []
+status              : {last_error="Connection refused", sec_since_connect="7", sec_since_disconnect="1", state=BACKOFF}
+target              : "tcp:127.0.0.1:6653"
+type                : []
+mininet> @W4:CACHED_PING@
+mininet> PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+64 bytes from 10.40.0.2: icmp_seq=1 ttl=64 time=0.279 ms
+64 bytes from 10.40.0.2: icmp_seq=2 ttl=64 time=0.340 ms
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1060ms
+rtt min/avg/max/mdev = 0.279/0.309/0.340/0.030 ms
+mininet> @W4:NEW_PING@
+mininet> PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+
+--- 10.40.0.3 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1019ms
+
+mininet> mininet> @W4:EXPIRED_PING@
+mininet> PING 10.40.0.2 (10.40.0.2) 56(84) bytes of data.
+
+--- 10.40.0.2 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1001ms
+
+mininet> mininet> mininet> @W4:STANDALONE_MODE@
+mininet> standalone
+mininet> @W4:STANDALONE_PING@
+mininet> PING 10.40.0.3 (10.40.0.3) 56(84) bytes of data.
+64 bytes from 10.40.0.3: icmp_seq=1 ttl=64 time=0.386 ms
+64 bytes from 10.40.0.3: icmp_seq=2 ttl=64 time=0.262 ms
+
+--- 10.40.0.3 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1063ms
+rtt min/avg/max/mdev = 0.262/0.324/0.386/0.062 ms
+mininet> @W4:END@
+mininet> *** Stopping 0 controllers
+
+*** Stopping 3 links
+...
+*** Stopping 1 switches
+s1 
+*** Stopping 3 hosts
+h1 h2 h3 
+*** Done
+completed in 129.138 seconds
