@@ -1,0 +1,32 @@
+name: Collect Week 4 OpenFlow evidence
+
+on:
+  push:
+    branches: [codex/week4-openflow, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  openflow-lab:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test evidence validator
+        run: cd netlab && python3 -m unittest -q test_week4.py
+      - name: Run course Mininet container and check observations
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run --rm -i --privileged \
+            -v "$PWD/netlab:/lab" -w /lab \
+            firdaussahran/netlab-mininet:1.0 \
+            bash run_week4.sh
+      - name: Upload Week 4 session
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: week4-openflow-evidence
+          path: netlab/evidence4/session.txt
