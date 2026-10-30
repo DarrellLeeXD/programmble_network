@@ -23,6 +23,11 @@ def packet_loss(output):
     return int(matches[-1]) if matches else None
 
 
+def packets_received(output):
+    matches = re.findall(r"\d+ packets transmitted,\s*(\d+) received", output)
+    return int(matches[-1]) if matches else None
+
+
 def validate(session):
     errors = []
 
@@ -55,7 +60,7 @@ def validate(session):
     contains("CONTROLLER_FLOW", "reactive OpenFlow entries", r"idle_timeout=60")
     contains("CONTROLLER_FLOW", "table-miss to controller", r"priority=0.*actions=CONTROLLER")
     contains("DISCONNECTED_STATUS", "disconnected controller", r"is_connected\s*:\s*false")
-    ping("CACHED_PING", 0)
+    expect("CACHED_PING", "at least one cached-flow reply", lambda s: (packets_received(s) or 0) > 0)
     ping("NEW_PING", 100)
     ping("EXPIRED_PING", 100)
     contains("STANDALONE_MODE", "standalone fail-mode", r"standalone")

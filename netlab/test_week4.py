@@ -35,6 +35,16 @@ class EvidenceTests(unittest.TestCase):
         errors = validate(session)
         self.assertTrue(any("LEARNING_CAPTURE" in error for error in errors), errors)
 
+    def test_cached_conversation_survives_with_one_reply(self):
+        session = "@W4:CACHED_PING@\n2 packets transmitted, 1 received, 50% packet loss\n@W4:END@\n"
+        errors = validate(session)
+        self.assertFalse(any("CACHED_PING" in error for error in errors), errors)
+
+    def test_cached_conversation_must_receive_a_reply(self):
+        session = "@W4:CACHED_PING@\n2 packets transmitted, 0 received, 100% packet loss\n@W4:END@\n"
+        errors = validate(session)
+        self.assertTrue(any("CACHED_PING" in error for error in errors), errors)
+
 
 if __name__ == "__main__":
     unittest.main()
