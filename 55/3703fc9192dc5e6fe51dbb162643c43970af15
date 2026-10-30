@@ -1,0 +1,46 @@
+netlab/make_page4.py
+  s_3ea27f9d4012d4::t_172b194fadd177 1-74,77-83,85-86,88-98
+  s_3ea27f9d4012d4::t_47574dd2a5ca73 84
+  s_3ea27f9d4012d4::t_576633f645d92f 75-76,87
+netlab/test_week4.py
+  s_3ea27f9d4012d4::t_b293cbb33c5412 10-11
+  s_3ea27f9d4012d4::t_cccc5fc9724883 23-27
+  s_3ea27f9d4012d4::t_d73ac37fdb7a34 28-37
+netlab/check_week4.py
+  s_3ea27f9d4012d4::t_67b8f0711b3439 40,46
+  s_3ea27f9d4012d4::t_5c5d8e976bec79 57
+  s_3ea27f9d4012d4::t_b9325468c1ba45 9
+netlab/README.md
+  s_3ea27f9d4012d4::t_fa74d5312816dc 90-108,113-132
+  s_3ea27f9d4012d4::t_b995d4ab008397 109-112
+docs/week4/index.html
+  s_a7d03123c25ce9::t_ff45fb57ee9b3f 11-12,23
+  s_3ea27f9d4012d4::t_3c1c7f295541b0 1-10,13-19,21-22,24-192
+  s_a7d03123c25ce9::t_91619bbf85d565 20
+netlab/evidence4/session.txt
+  s_3ea27f9d4012d4::t_3c1c7f295541b0 1-251
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "553703fc9192dc5e6fe51dbb162643c43970af15",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    },
+    "s_a7d03123c25ce9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "unknown"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    }
+  }
+}
