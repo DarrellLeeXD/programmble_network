@@ -1,0 +1,26 @@
+netlab/test_week4.py
+  s_3ea27f9d4012d4::t_8ce60a249a1ec0 1-25
+netlab/run_week4.sh
+  s_3ea27f9d4012d4::t_63e0f6c71872a4 1-91
+.github/workflows/week4-evidence.yml
+  s_3ea27f9d4012d4::t_b81e4919a5699d 18
+  s_3ea27f9d4012d4::t_63e0f6c71872a4 1-17,19-32
+netlab/check_week4.py
+  s_3ea27f9d4012d4::t_fe7634da6a2f65 1-72
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "7248c9e708d10c25401d3b29d8ecebf2cf6a29df",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    }
+  }
+}
