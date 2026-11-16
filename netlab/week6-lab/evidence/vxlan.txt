@@ -1,0 +1,219 @@
+*** Error setting resource limits. Mininet's performance may be affected.
+*** Creating network
+*** Adding controller
+*** Adding hosts:
+h1 h2
+*** Adding switches:
+s1
+*** Adding links:
+(h1, s1) (h2, s1)
+*** Configuring hosts
+h1 h2
+*** Starting controller
+
+*** Starting 1 switches
+s1
+*** Starting CLI:
+mininet> == Part 3: VXLAN over IPv4 ==
+mininet> mininet> mininet> mininet> mininet> mininet> mininet> PING 10.40.100.2 (10.40.100.2) 56(84) bytes of data.
+64 bytes from 10.40.100.2: icmp_seq=1 ttl=64 time=0.047 ms
+64 bytes from 10.40.100.2: icmp_seq=2 ttl=64 time=0.034 ms
+
+--- 10.40.100.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1008ms
+rtt min/avg/max/mdev = 0.034/0.040/0.047/0.006 ms
+mininet> [1] 199
+mininet> PING 10.40.100.2 (10.40.100.2) 56(84) bytes of data.
+64 bytes from 10.40.100.2: icmp_seq=1 ttl=64 time=0.019 ms
+
+--- 10.40.100.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.019/0.019/0.019/0.000 ms
+mininet> mininet> libibverbs: Warning: couldn't open config directory '/etc/libibverbs.d'.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on h2-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+07:25:15.334116 IP 10.40.0.1.53252 > 10.40.0.2.4789: VXLAN, flags [I] (0x08), vni 100
+IP6 fe80::d003:4bff:fee6:9f0 > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+07:25:15.334134 IP 10.40.0.1.42099 > 10.40.0.2.4789: VXLAN, flags [I] (0x08), vni 100
+IP6 fe80::d003:4bff:fee6:9f0 > ff02::2: ICMP6, router solicitation, length 16
+07:25:15.742199 IP 10.40.0.1.53252 > 10.40.0.2.4789: VXLAN, flags [I] (0x08), vni 100
+IP6 fe80::d003:4bff:fee6:9f0 > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+07:25:16.038124 IP 10.40.0.2.43337 > 10.40.0.1.4789: VXLAN, flags [I] (0x08), vni 100
+IP6 fe80::3c61:d6ff:fe70:9aa0 > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+07:25:16.038141 IP 10.40.0.2.50028 > 10.40.0.1.4789: VXLAN, flags [I] (0x08), vni 100
+IP6 fe80::3c61:d6ff:fe70:9aa0 > ff02::2: ICMP6, router solicitation, length 16
+07:25:16.374098 IP 10.40.0.2.43337 > 10.40.0.1.4789: VXLAN, flags [I] (0x08), vni 100
+IP6 fe80::3c61:d6ff:fe70:9aa0 > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+
+6 packets captured
+6 packets received by filter
+0 packets dropped by kernel
+mininet> == Part 4: IPv4 overhead and throughput ==
+mininet> 2: h1-eth0@if11: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP mode DEFAULT group default qlen 1000
+    link/ether 00:00:00:00:00:01 brd ff:ff:ff:ff:ff:ff link-netnsid 0
+mininet> 3: vxlan100: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1450 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether d2:03:4b:e6:09:f0 brd ff:ff:ff:ff:ff:ff
+mininet> PING 10.40.100.2 (10.40.100.2) 1422(1450) bytes of data.
+1430 bytes from 10.40.100.2: icmp_seq=1 ttl=64 time=0.023 ms
+
+--- 10.40.100.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.023/0.023/0.023/0.000 ms
+mininet> PING 10.40.100.2 (10.40.100.2) 1423(1451) bytes of data.
+ping: local error: message too long, mtu=1450
+
+--- 10.40.100.2 ping statistics ---
+1 packets transmitted, 0 received, +1 errors, 100% packet loss, time 0ms
+
+mininet> mininet> Connecting to host 10.40.0.2, port 5201
+[  5] local 10.40.0.1 port 45332 connected to 10.40.0.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  5.47 GBytes  47.0 Gbits/sec    0   1.26 MBytes
+[  5]   1.00-2.00   sec  5.35 GBytes  46.0 Gbits/sec    0   1.26 MBytes
+[  5]   2.00-3.00   sec  5.44 GBytes  46.7 Gbits/sec    0   1.53 MBytes
+[  5]   3.00-4.00   sec  5.11 GBytes  43.9 Gbits/sec    0   1.53 MBytes
+[  5]   4.00-5.00   sec  4.77 GBytes  41.0 Gbits/sec    0   1.60 MBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec  27.3 GBytes  46.8 Gbits/sec    0             sender
+[  5]   0.00-5.00   sec  27.3 GBytes  46.8 Gbits/sec                  receiver
+
+iperf Done.
+mininet> Connecting to host 10.40.100.2, port 5201
+[  5] local 10.40.100.1 port 34662 connected to 10.40.100.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  3.38 GBytes  29.0 Gbits/sec    0    613 KBytes
+[  5]   1.00-2.00   sec  1.59 GBytes  13.7 Gbits/sec    0    613 KBytes
+[  5]   2.00-3.00   sec  2.89 GBytes  24.8 Gbits/sec    0    613 KBytes
+[  5]   3.00-4.00   sec  3.29 GBytes  28.3 Gbits/sec    0    751 KBytes
+[  5]   4.00-5.00   sec  2.42 GBytes  20.8 Gbits/sec    0    913 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec  16.9 GBytes  29.0 Gbits/sec    0             sender
+[  5]   0.00-5.00   sec  16.9 GBytes  29.0 Gbits/sec                  receiver
+
+iperf Done.
+mininet> == Part 5: VXLAN over IPv6 ==
+mininet> mininet> mininet> PING fd00:4940::2 (fd00:4940::2) 56 data bytes
+64 bytes from fd00:4940::2: icmp_seq=1 ttl=64 time=2083 ms
+64 bytes from fd00:4940::2: icmp_seq=2 ttl=64 time=1024 ms
+
+--- fd00:4940::2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1059ms
+rtt min/avg/max/mdev = 1024.029/1553.303/2082.578/529.274 ms, pipe 2
+mininet> mininet> mininet> mininet> mininet> mininet> mininet> PING 10.40.106.2 (10.40.106.2) 56(84) bytes of data.
+64 bytes from 10.40.106.2: icmp_seq=1 ttl=64 time=0.060 ms
+64 bytes from 10.40.106.2: icmp_seq=2 ttl=64 time=0.028 ms
+
+--- 10.40.106.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1015ms
+rtt min/avg/max/mdev = 0.028/0.044/0.060/0.016 ms
+mininet> 4: vxlan106: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1430 qdisc noqueue state UNKNOWN mode DEFAULT group default qlen 1000
+    link/ether 76:a7:02:7e:37:23 brd ff:ff:ff:ff:ff:ff
+mininet> PING 10.40.106.2 (10.40.106.2) 1402(1430) bytes of data.
+1410 bytes from 10.40.106.2: icmp_seq=1 ttl=64 time=0.020 ms
+
+--- 10.40.106.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.020/0.020/0.020/0.000 ms
+mininet> PING 10.40.106.2 (10.40.106.2) 1403(1431) bytes of data.
+ping: local error: message too long, mtu=1430
+
+--- 10.40.106.2 ping statistics ---
+1 packets transmitted, 0 received, +1 errors, 100% packet loss, time 0ms
+
+mininet> [1] 234
+mininet> PING 10.40.106.2 (10.40.106.2) 56(84) bytes of data.
+64 bytes from 10.40.106.2: icmp_seq=1 ttl=64 time=0.039 ms
+
+--- 10.40.106.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.039/0.039/0.039/0.000 ms
+mininet> mininet> libibverbs: Warning: couldn't open config directory '/etc/libibverbs.d'.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on h2-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+07:25:35.542104 IP6 fd00:4940::2.39918 > fd00:4940::1.4789: VXLAN, flags [I] (0x08), vni 106
+IP6 fe80::7cc8:71ff:fe4b:fc12 > ff02::16: HBH ICMP6, multicast listener report v2, 1 group record(s), length 28
+
+1 packet captured
+4 packets received by filter
+0 packets dropped by kernel
+mininet> == Part 6: underlay MTU mismatch ==
+mininet> mininet> PING 10.40.100.2 (10.40.100.2) 56(84) bytes of data.
+64 bytes from 10.40.100.2: icmp_seq=1 ttl=64 time=0.041 ms
+64 bytes from 10.40.100.2: icmp_seq=2 ttl=64 time=0.034 ms
+
+--- 10.40.100.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1008ms
+rtt min/avg/max/mdev = 0.034/0.037/0.041/0.003 ms
+mininet> 0
+mininet> 0
+mininet> PING 10.40.100.2 (10.40.100.2) 1400(1428) bytes of data.
+
+--- 10.40.100.2 ping statistics ---
+2 packets transmitted, 0 received, 100% packet loss, time 1021ms
+
+mininet> Connecting to host 10.40.100.2, port 5201
+[  5] local 10.40.100.1 port 56690 connected to 10.40.100.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  3.88 MBytes  32.5 Mbits/sec    3   1.37 KBytes
+[  5]   1.00-2.00   sec  0.00 Bytes  0.00 bits/sec    1   1.37 KBytes
+[  5]   2.00-3.00   sec  0.00 Bytes  0.00 bits/sec    0   1.37 KBytes
+[  5]   3.00-4.00   sec  0.00 Bytes  0.00 bits/sec    1   1.37 KBytes
+[  5]   4.00-5.00   sec  0.00 Bytes  0.00 bits/sec    0   1.37 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec  3.88 MBytes  6.50 Mbits/sec    5             sender
+[  5]   0.00-5.00   sec  1.12 MBytes  1.89 Mbits/sec                  receiver
+
+iperf Done.
+mininet> PING 10.40.100.2 (10.40.100.2) 1322(1350) bytes of data.
+1330 bytes from 10.40.100.2: icmp_seq=1 ttl=64 time=0.023 ms
+
+--- 10.40.100.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.023/0.023/0.023/0.000 ms
+mininet> PING 10.40.100.2 (10.40.100.2) 1326(1354) bytes of data.
+1334 bytes from 10.40.100.2: icmp_seq=1 ttl=64 time=0.028 ms
+
+--- 10.40.100.2 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.028/0.028/0.028/0.000 ms
+mininet> PING 10.40.100.2 (10.40.100.2) 1327(1355) bytes of data.
+
+--- 10.40.100.2 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+mininet> 9
+mininet> 9
+mininet> mininet> PING 10.40.100.2 (10.40.100.2) 1400(1428) bytes of data.
+1408 bytes from 10.40.100.2: icmp_seq=1 ttl=64 time=0.028 ms
+1408 bytes from 10.40.100.2: icmp_seq=2 ttl=64 time=0.022 ms
+
+--- 10.40.100.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1052ms
+rtt min/avg/max/mdev = 0.022/0.025/0.028/0.003 ms
+mininet> Connecting to host 10.40.100.2, port 5201
+[  5] local 10.40.100.1 port 33202 connected to 10.40.100.2 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr  Cwnd
+[  5]   0.00-1.00   sec  3.42 GBytes  29.3 Gbits/sec    0    668 KBytes
+[  5]   1.00-2.00   sec  3.38 GBytes  29.0 Gbits/sec    0    668 KBytes
+[  5]   2.00-3.00   sec  3.39 GBytes  29.1 Gbits/sec    0    668 KBytes
+[  5]   3.00-4.00   sec  3.43 GBytes  29.4 Gbits/sec    0    736 KBytes
+[  5]   4.00-5.00   sec  3.39 GBytes  29.1 Gbits/sec    0    736 KBytes
+- - - - - - - - - - - - - - - - - - - - - - - - -
+[ ID] Interval           Transfer     Bitrate         Retr
+[  5]   0.00-5.00   sec  17.0 GBytes  29.2 Gbits/sec    0             sender
+[  5]   0.00-5.00   sec  17.0 GBytes  29.2 Gbits/sec                  receiver
+
+iperf Done.
+mininet> *** Stopping 0 controllers
+
+*** Stopping 2 links
+..
+*** Stopping 1 switches
+s1
+*** Stopping 2 hosts
+h1 h2
+*** Done
+completed in 41.445 seconds

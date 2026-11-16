@@ -1,0 +1,50 @@
+== hv1: amber VXLAN before any traffic ==
+$ hv1 bridge fdb show dev vxlan494001
+
+86:be:57:c4:56:41 vlan 1 master br494001 permanent
+86:be:57:c4:56:41 master br494001 permanent
+00:00:00:00:00:00 dst 10.40.0.2 self permanent
+00:00:00:00:00:00 dst 10.40.0.3 self permanent
+
+$ am1 ping -c 2 -W 2 10.40.60.11
+
+PING 10.40.60.11 (10.40.60.11) 56(84) bytes of data.
+64 bytes from 10.40.60.11: icmp_seq=1 ttl=64 time=0.133 ms
+64 bytes from 10.40.60.11: icmp_seq=2 ttl=64 time=0.040 ms
+
+--- 10.40.60.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1016ms
+rtt min/avg/max/mdev = 0.040/0.086/0.133/0.046 ms
+
+== captured on hv3's underlay ==
+$ hv3 cat /tmp/week6-hv3.txt
+
+libibverbs: Warning: couldn't open config directory '/etc/libibverbs.d'.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on hv3-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+07:25:58.029869 IP 10.40.0.1.48767 > 10.40.0.3.4789: VXLAN, flags [I] (0x08), vni 494001
+ARP, Request who-has 10.40.60.11 tell 10.40.60.10, length 28
+
+1 packet captured
+1 packet received by filter
+0 packets dropped by kernel
+
+== hv1: amber VXLAN after traffic ==
+$ hv1 bridge fdb show dev vxlan494001
+
+02:07:89:b1:00:0b master br494001
+86:be:57:c4:56:41 vlan 1 master br494001 permanent
+86:be:57:c4:56:41 master br494001 permanent
+02:07:89:b1:00:0b dst 10.40.0.2 self
+00:00:00:00:00:00 dst 10.40.0.2 self permanent
+00:00:00:00:00:00 dst 10.40.0.3 self permanent
+
+== hv3: amber VXLAN after traffic ==
+$ hv3 bridge fdb show dev vxlan494001
+
+02:07:89:b1:00:0a master br494001
+32:71:21:eb:54:ab vlan 1 master br494001 permanent
+32:71:21:eb:54:ab master br494001 permanent
+02:07:89:b1:00:0a dst 10.40.0.1 self
+00:00:00:00:00:00 dst 10.40.0.1 self permanent
+00:00:00:00:00:00 dst 10.40.0.2 self permanent

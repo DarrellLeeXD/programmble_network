@@ -18,10 +18,10 @@ answers:
   isolation:
     question: "Two of your VMs have the same IP address. Using your evidence, explain how a ping reaches the right one — and what would have to go wrong for one tenant to see another's traffic."
     answer: >-
-      am1's ping to 10.40.60.11 must reach am2 on hv2, even though vi2 on hv3
-      owns the same address. Amber's ARP and ICMP stay on br494001 and
-      vxlan494001. The violet VM's simultaneous capture should see none of
-      that exchange. The neighbor entry on am1 identifies am2 by its
+      am1's three pings to 10.40.60.11 reached am2 on hv2, even though vi2 on
+      hv3 owns the same address. Amber's ARP and ICMP stayed on br494001 and
+      vxlan494001; vi2's simultaneous capture recorded zero packets. The
+      neighbor entry on am1 identifies am2 by its
       02:07:89:b1:00:0b MAC; vi1's entry for the same IP identifies vi2 by
       02:07:89:b2:00:0b. The different VNI bytes in those MACs help inspect
       the result, but the actual boundary is separate bridges and VNIs.
@@ -30,23 +30,31 @@ answers:
   flood_learn:
     question: "Using your evidence, explain what was flooded, to which hypervisors, and what each VTEP learned. With 50 hypervisors in one VNI, how many copies would one broadcast need — and how would EVPN change that?"
     answer: >-
-      On a fresh build, hv1 has only all-zero flood FDB entries pointing at
-      amber's other VTEPs, hv2 (10.40.0.2) and hv3 (10.40.0.3). am1's first
-      ARP request is copied to both, so hv3 can capture VNI 494001 traffic
-      even though the ping target am2 is on hv2. Source MAC learning then
-      associates am1's MAC with hv1 and am2's MAC with hv2; later known-unicast
-      packets need only one remote VTEP. With 50 hypervisors in a VNI, one
+      On a fresh build, hv1's remote VTEP FDB has only all-zero flood entries
+      pointing at amber's other VTEPs, hv2 (10.40.0.2) and hv3 (10.40.0.3);
+      the bridge also shows its own permanent local MAC. am1's first ARP
+      request was copied to both. hv3 captured the request with VNI 494001
+      even though the target am2 was on hv2. Afterward, hv1 learned am2's
+      02:07:89:b1:00:0b at 10.40.0.2 and hv3 learned am1's
+      02:07:89:b1:00:0a at 10.40.0.1. Known-unicast packets then need only
+      one remote VTEP. With 50 hypervisors in a VNI, one
       head-end replicated broadcast needs 49 underlay copies. EVPN advertises
       MAC/IP locations through BGP and can answer ARP at the VTEP, avoiding
       many discovery floods; genuine broadcasts still need distribution.
   mtu:
     question: "Compare your two MTU fixes using your measurements. Which would you choose for a data centre, what does each cost, and who has to change what?"
     answer: >-
-      Fix A limits each tenant to 1450 bytes, exactly 1500 minus VXLAN's
+      The forced 1500-on-1500 design passed small pings but lost both
+      1472-byte pings and transferred zero bytes at the TCP receiver in this
+      run. The DF boundary was payload 1422 working and 1423 failing. Fix A
+      limits each tenant to 1450 bytes, exactly 1500 minus VXLAN's
       50-byte overhead. A 1422-byte ping payload fills that 1450-byte inner
       IP packet, whereas 1423 is too large at the tenant interface. Fix B
       keeps the tenant MTU at 1500 and raises the underlay to 9000, letting a
-      1472-byte payload fit but rejecting 1473 at the VM. I choose fix A for
+      1472-byte payload fit but rejecting 1473 at the VM. The measured
+      five-second receiver rates were 3.62 Gbit/s for A and 3.89 Gbit/s for
+      B on this virtual runner; one run is too little to claim a reliable
+      performance difference. I choose fix A for
       this four-hypervisor demonstration because it needs only the VM-side
       MTU policy and works on standard 1500-byte paths. It costs 50 bytes of
       tenant packet size and can reduce effective TCP throughput. A real data

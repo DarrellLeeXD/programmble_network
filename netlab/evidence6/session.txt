@@ -1,0 +1,267 @@
+Unable to find image 'firdaussahran/netlab-mininet:1.0' locally
+1.0: Pulling from firdaussahran/netlab-mininet
+a60ef8ec184e: Pulling fs layer
+426bcb66c47f: Pulling fs layer
+4e1dc900b7da: Pulling fs layer
+44136fa355b3: Already exists
+6146ee8b6d96: Download complete
+a60ef8ec184e: Download complete
+426bcb66c47f: Download complete
+a60ef8ec184e: Pull complete
+4e1dc900b7da: Download complete
+426bcb66c47f: Pull complete
+4e1dc900b7da: Pull complete
+Digest: sha256:61e473c216738b60a74196ac741b915a40bca86fa0aa2e16e7d753569d1b83b6
+Status: Downloaded newer image for firdaussahran/netlab-mininet:1.0
+----------------------------------------------------------------------
+Ran 3 tests in 0.004s
+
+OK
+PASS: Mininet namespace dump
+PASS: manual bridge ping
+PASS: IPv4 VXLAN VNI 100 capture
+PASS: IPv6 VXLAN VNI 106 capture
+PASS: IPv4 overlay MTU 1450
+PASS: IPv6 overlay MTU 1430
+PASS: IPv4 size boundary
+PASS: IPv6 size boundary
+PASS: MTU mismatch size boundary
+PASS: throughput receivers
+== Fresh build: overlay.yaml ==
+*** Error setting resource limits. Mininet's performance may be affected.
+VTEP commands on hv1 (10.40.0.1):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv1-eth1 master br494001
+  ip link set hv1-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv1-eth2 master br494002
+  ip link set hv1-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv2 (10.40.0.2):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.2 dstport 4789 dev hv2-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv2-eth1 master br494001
+  ip link set hv2-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+VTEP commands on hv3 (10.40.0.3):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv3-eth1 master br494001
+  ip link set hv3-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv3-eth2 master br494002
+  ip link set hv3-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv4 (10.40.0.4):
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.4 dstport 4789 dev hv4-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv4-eth1 master br494002
+  ip link set hv4-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+== Fresh build: blackhole.yaml ==
+VTEP commands on hv1 (10.40.0.1):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv1-eth1 master br494001
+  ip link set hv1-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv1-eth2 master br494002
+  ip link set hv1-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv2 (10.40.0.2):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.2 dstport 4789 dev hv2-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv2-eth1 master br494001
+  ip link set hv2-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+VTEP commands on hv3 (10.40.0.3):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv3-eth1 master br494001
+  ip link set hv3-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv3-eth2 master br494002
+  ip link set hv3-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv4 (10.40.0.4):
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.4 dstport 4789 dev hv4-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv4-eth1 master br494002
+  ip link set hv4-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+== Fresh build: mtu_a.yaml ==
+VTEP commands on hv1 (10.40.0.1):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv1-eth1 master br494001
+  ip link set hv1-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv1-eth2 master br494002
+  ip link set hv1-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv2 (10.40.0.2):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.2 dstport 4789 dev hv2-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv2-eth1 master br494001
+  ip link set hv2-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+VTEP commands on hv3 (10.40.0.3):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv3-eth1 master br494001
+  ip link set hv3-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv3-eth2 master br494002
+  ip link set hv3-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv4 (10.40.0.4):
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.4 dstport 4789 dev hv4-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv4-eth1 master br494002
+  ip link set hv4-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+== Fresh build: mtu_b.yaml ==
+VTEP commands on hv1 (10.40.0.1):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv1-eth1 master br494001
+  ip link set hv1-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.1 dstport 4789 dev hv1-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv1-eth2 master br494002
+  ip link set hv1-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv2 (10.40.0.2):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.2 dstport 4789 dev hv2-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv2-eth1 master br494001
+  ip link set hv2-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.3
+VTEP commands on hv3 (10.40.0.3):
+  ip link add br494001 type bridge
+  ip link set br494001 up
+  ip link add vxlan494001 type vxlan id 494001 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494001 master br494001
+  ip link set vxlan494001 up
+  ip link set hv3-eth1 master br494001
+  ip link set hv3-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494001 dst 10.40.0.2
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.3 dstport 4789 dev hv3-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv3-eth2 master br494002
+  ip link set hv3-eth2 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.4
+VTEP commands on hv4 (10.40.0.4):
+  ip link add br494002 type bridge
+  ip link set br494002 up
+  ip link add vxlan494002 type vxlan id 494002 local 10.40.0.4 dstport 4789 dev hv4-eth0
+  ip link set vxlan494002 master br494002
+  ip link set vxlan494002 up
+  ip link set hv4-eth1 master br494002
+  ip link set hv4-eth1 up
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.1
+  bridge fdb append 00:00:00:00:00:00 dev vxlan494002 dst 10.40.0.3
+Week 6 assignment evidence saved in evidence6/

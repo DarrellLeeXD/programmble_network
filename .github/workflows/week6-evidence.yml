@@ -18,16 +18,17 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p netlab/evidence6
+          mkdir -p netlab/evidence6 netlab/week6-lab/evidence
           docker run --rm -i --privileged \
             -v "$PWD/netlab:/lab" -w /lab \
             firdaussahran/netlab-mininet:1.0 \
-            bash -c 'python3 -m unittest -q test_week6.py && bash week6-lab/run_lab.sh && python3 run_week6_assignment.py' \
+            bash -c 'python3 -m unittest -q test_week6.py && bash week6-lab/run_lab.sh && python3 run_week6_assignment.py && python3 make_page6.py overlay.yaml' \
             2>&1 | tee netlab/evidence6/session.txt
       - name: Inspect an Alpine container on the Linux host
         shell: bash
         run: |
           set -euo pipefail
+          trap 'docker rm -f c1 >/dev/null 2>&1 || true' EXIT
           docker run -d --name c1 alpine:3.20 sleep 600
           {
             echo '$ docker exec c1 ip addr show eth0'
@@ -46,3 +47,4 @@ jobs:
           path: |
             netlab/evidence6/
             netlab/week6-lab/evidence/
+            netlab/docs/week6/index.html

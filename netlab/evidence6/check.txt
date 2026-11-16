@@ -1,0 +1,4 @@
+$ python3 build_overlay.py blackhole.yaml
+PROBLEM: tenant amber: MTU 1500 + 50 bytes of VXLAN overhead = 1550, exceeding underlay MTU 1500 by 50 bytes
+PROBLEM: tenant violet: MTU 1500 + 50 bytes of VXLAN overhead = 1550, exceeding underlay MTU 1500 by 50 bytes
+Fix the design and try again: nothing was built.

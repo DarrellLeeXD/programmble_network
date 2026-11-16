@@ -1,0 +1,43 @@
++ ip netns add red
++ ip netns add blue
++ ip link add veth-red type veth peer name red-br
++ ip link add veth-blue type veth peer name blue-br
++ ip link set veth-red netns red
++ ip link set veth-blue netns blue
++ ip link add br0 type bridge
++ ip link set red-br master br0
++ ip link set blue-br master br0
++ ip link set br0 up
++ ip link set red-br up
++ ip link set blue-br up
++ ip netns exec red ip addr add 10.40.9.1/24 dev veth-red
++ ip netns exec red ip link set veth-red up
++ ip netns exec blue ip addr add 10.40.9.2/24 dev veth-blue
++ ip netns exec blue ip link set veth-blue up
++ ip netns exec red ping -c 2 -W 2 10.40.9.2
+PING 10.40.9.2 (10.40.9.2) 56(84) bytes of data.
+64 bytes from 10.40.9.2: icmp_seq=1 ttl=64 time=0.040 ms
+64 bytes from 10.40.9.2: icmp_seq=2 ttl=64 time=0.021 ms
+
+--- 10.40.9.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1054ms
+rtt min/avg/max/mdev = 0.021/0.030/0.040/0.009 ms
++ bridge fdb show br br0
+5e:01:66:c5:44:fb dev red-br master br0
+96:00:82:13:91:15 dev red-br vlan 1 master br0 permanent
+96:00:82:13:91:15 dev red-br master br0 permanent
+33:33:00:00:00:01 dev red-br self permanent
+01:00:5e:00:00:01 dev red-br self permanent
+33:33:ff:13:91:15 dev red-br self permanent
+a2:d0:ea:4d:9a:e2 dev blue-br master br0
+8e:a8:4a:b6:6d:a5 dev blue-br vlan 1 master br0 permanent
+8e:a8:4a:b6:6d:a5 dev blue-br master br0 permanent
+33:33:00:00:00:01 dev blue-br self permanent
+01:00:5e:00:00:01 dev blue-br self permanent
+33:33:ff:b6:6d:a5 dev blue-br self permanent
+33:33:00:00:00:01 dev br0 self permanent
+01:00:5e:00:00:6a dev br0 self permanent
+33:33:00:00:00:6a dev br0 self permanent
+01:00:5e:00:00:01 dev br0 self permanent
+33:33:ff:b6:6d:a5 dev br0 self permanent
++ set +x

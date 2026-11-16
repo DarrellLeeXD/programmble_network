@@ -1,0 +1,40 @@
+== amber and violet share 10.40.60.11 but are isolated ==
+$ am1 ping -c 3 -W 2 10.40.60.11
+
+PING 10.40.60.11 (10.40.60.11) 56(84) bytes of data.
+64 bytes from 10.40.60.11: icmp_seq=1 ttl=64 time=0.082 ms
+64 bytes from 10.40.60.11: icmp_seq=2 ttl=64 time=0.045 ms
+64 bytes from 10.40.60.11: icmp_seq=3 ttl=64 time=0.040 ms
+
+--- 10.40.60.11 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2067ms
+rtt min/avg/max/mdev = 0.040/0.055/0.082/0.018 ms
+
+$ am1 ip neigh show 10.40.60.11
+
+10.40.60.11 dev am1-eth0 lladdr 02:07:89:b1:00:0b REACHABLE
+
+== captured on violet VM vi2 during amber traffic ==
+$ vi2 cat /tmp/week6-vi2.txt
+
+libibverbs: Warning: couldn't open config directory '/etc/libibverbs.d'.
+tcpdump: verbose output suppressed, use -v[v]... for full protocol decode
+listening on vi2-eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+
+0 packets captured
+0 packets received by filter
+0 packets dropped by kernel
+
+$ vi1 ping -c 2 -W 2 10.40.60.11
+
+PING 10.40.60.11 (10.40.60.11) 56(84) bytes of data.
+64 bytes from 10.40.60.11: icmp_seq=1 ttl=64 time=0.142 ms
+64 bytes from 10.40.60.11: icmp_seq=2 ttl=64 time=0.050 ms
+
+--- 10.40.60.11 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1020ms
+rtt min/avg/max/mdev = 0.050/0.096/0.142/0.046 ms
+
+$ vi1 ip neigh show 10.40.60.11
+
+10.40.60.11 dev vi1-eth0 lladdr 02:07:89:b2:00:0b REACHABLE
