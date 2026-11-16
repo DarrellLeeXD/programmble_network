@@ -1,0 +1,48 @@
+name: Collect Week 6 VXLAN evidence
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  week6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test and run course Mininet lab
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p netlab/evidence6
+          docker run --rm -i --privileged \
+            -v "$PWD/netlab:/lab" -w /lab \
+            firdaussahran/netlab-mininet:1.0 \
+            bash -c 'python3 -m unittest -q test_week6.py && bash week6-lab/run_lab.sh && python3 run_week6_assignment.py' \
+            2>&1 | tee netlab/evidence6/session.txt
+      - name: Inspect an Alpine container on the Linux host
+        shell: bash
+        run: |
+          set -euo pipefail
+          docker run -d --name c1 alpine:3.20 sleep 600
+          {
+            echo '$ docker exec c1 ip addr show eth0'
+            docker exec c1 ip addr show eth0
+            echo '$ docker exec c1 cat /etc/os-release'
+            docker exec c1 cat /etc/os-release
+            echo '$ docker exec c1 ps'
+            docker exec c1 ps
+          } > netlab/week6-lab/evidence/containers.txt
+          docker rm -f c1
+      - name: Upload Week 6 evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: week6-evidence
+          path: |
+            netlab/evidence6/
+            netlab/week6-lab/evidence/

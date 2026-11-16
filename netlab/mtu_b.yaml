@@ -1,0 +1,33 @@
+# Week 6 jumbo 9000-byte underlay. VM addresses start at .10; the VNI determines each MAC.
+student_id_last4: '4940'
+underlay:
+  network: 10.40.0.0/24
+  mtu: 9000
+hypervisors:
+- hv1
+- hv2
+- hv3
+- hv4
+tenants:
+- name: amber
+  vni: 494001
+  network: 10.40.60.0/24
+  mtu: 1500
+  vms:
+  - - am1
+    - hv1
+  - - am2
+    - hv2
+  - - am3
+    - hv3
+- name: violet
+  vni: 494002
+  network: 10.40.60.0/24
+  mtu: 1500
+  vms:
+  - - vi1
+    - hv1
+  - - vi2
+    - hv3
+  - - vi3
+    - hv4
