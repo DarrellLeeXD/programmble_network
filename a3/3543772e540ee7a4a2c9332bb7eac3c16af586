@@ -1,0 +1,23 @@
+docs/week6/index.html
+  s_3ea27f9d4012d4::t_753bcf62b346e3 1-501
+netlab/week6-lab/evidence/containers.txt
+  s_3ea27f9d4012d4::t_06f8e03d4ea259 1-16
+netlab/docs/week6/index.html
+  s_3ea27f9d4012d4::t_753bcf62b346e3 1-501
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "a33543772e540ee7a4a2c9332bb7eac3c16af586",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    }
+  }
+}
