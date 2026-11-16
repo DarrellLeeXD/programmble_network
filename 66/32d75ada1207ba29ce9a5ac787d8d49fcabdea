@@ -1,0 +1,23 @@
+netlab/week6-lab/check_lab.py
+  s_3ea27f9d4012d4::t_fef58ef243daa1 10-18,26-28
+README.md
+  s_3ea27f9d4012d4::t_bbf90c41f3749e 1-21
+netlab/page6.yaml
+  s_3ea27f9d4012d4::t_bbf90c41f3749e 5,10-17,20-29,32-41,44-56,59-70
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "6632d75ada1207ba29ce9a5ac787d8d49fcabdea",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    }
+  }
+}
