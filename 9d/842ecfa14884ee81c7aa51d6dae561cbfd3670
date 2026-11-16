@@ -1,0 +1,52 @@
+netlab/run_week6_assignment.py
+  s_3ea27f9d4012d4::t_fe2703319260d3 1-142
+netlab/week6-lab/run_lab.sh
+  s_3ea27f9d4012d4::t_b5c924c81c67f4 1-102
+netlab/mtu_a.yaml
+  s_a7d03123c25ce9::t_7683a0feb46fa1 1-33
+.github/workflows/week6-evidence.yml
+  s_3ea27f9d4012d4::t_fcb8a2f0ef4965 21
+  s_3ea27f9d4012d4::t_b5c924c81c67f4 1-20,22-48
+netlab/mtu_b.yaml
+  s_a7d03123c25ce9::t_7683a0feb46fa1 1-33
+netlab/test_week6.py
+  s_3ea27f9d4012d4::t_ae67d426dc67ec 1-90
+netlab/week6-lab/check_lab.py
+  s_3ea27f9d4012d4::t_b5c924c81c67f4 1-25
+netlab/make_page6.py
+  s_3ea27f9d4012d4::t_94b99a1b181488 1-198
+netlab/overlay.yaml
+  s_a7d03123c25ce9::t_7683a0feb46fa1 1-2,4-10,12-33
+  s_3ea27f9d4012d4::t_94b99a1b181488 3,11
+netlab/build_overlay.py
+  s_3ea27f9d4012d4::t_7d64fa00c045d2 169,180-188,193,211-228
+  s_3ea27f9d4012d4::t_94b99a1b181488 1-168,170-179,189-192,194-210,229-329
+netlab/page6.yaml
+  s_3ea27f9d4012d4::t_94b99a1b181488 1-22
+netlab/blackhole.yaml
+  s_a7d03123c25ce9::t_7683a0feb46fa1 1-33
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.2-bit.2+419f699",
+  "base_commit_sha": "9d842ecfa14884ee81c7aa51d6dae561cbfd3670",
+  "prompts": {},
+  "sessions": {
+    "s_3ea27f9d4012d4": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "gpt-6-sol"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    },
+    "s_a7d03123c25ce9": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "01a14296-f230-7d41-bb92-ba25b2d7e091",
+        "model": "unknown"
+      },
+      "human_author": "darrell.lee <darrellleewernhan@gmail.com>"
+    }
+  }
+}
